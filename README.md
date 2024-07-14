@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YouTube Downloader
 
-## Getting Started
+A web application to download YouTube videos in different qualities and formats. This project is built with React and Next.js, providing an intuitive UI for users to paste a YouTube URL, select the desired video quality, and download the video.
 
-First, run the development server:
+![Screenshot 2024-07-14 224409](https://github.com/user-attachments/assets/fb0321fa-d5ae-46e9-946b-145f5a0ac6e0)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+- Paste a YouTube video URL to fetch video details
+- Select from available video qualities and formats
+- Download the selected video with a single click
+- Displays video details such as title, duration, views, and author
+- Highlights formats without audio in red for better visibility
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Live Version
 
-## Learn More
+Check out the live version here: [YouTube Downloader](https://youtube-downloader-reversed-engineered.vercel.app/)
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/themrsami/Youtube-Downloader-Reversed-Engineered
+    cd your-repo-name
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+2. Install dependencies:
+    ```bash
+    npm install
+    ```
 
-## Deploy on Vercel
+3. Run the development server:
+    ```bash
+    npm run dev
+    ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Open your browser and navigate to `http://localhost:3000`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Usage
+
+1. Paste the YouTube video URL into the input field.
+2. Wait for the video details and available formats to load.
+3. Select the desired quality from the dropdown menu.
+4. Click the download button to start downloading the video.
+
+## API Endpoint
+
+The application uses a custom API endpoint to fetch video data:
+
+- **POST `/api/fetchVideoData`**: Accepts a video ID and context, and returns the available video formats and details.
+
+## Contributing
+
+Contributions are welcome! If you'd like to contribute to this project, please fork the repository and use a feature branch. Pull requests are warmly welcome.
+
+1. Fork the repository.
+2. Create a new branch: `git checkout -b my-feature-branch`
+3. Make your changes and commit them: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin my-feature-branch`
+5. Submit a pull request.
+
+## License
+
+This project is licensed under the MIT License.
