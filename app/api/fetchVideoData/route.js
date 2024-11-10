@@ -1,39 +1,55 @@
 // app/api/fetchVideoData/route.js
+import ytdl from 'ytdl-core';
 
 export async function POST(request) {
-    const { videoId, context } = await request.json();
-  
-    const postDataVideo = {
-      videoId,
-      context,
-    };
-  
-    const videourl = 'https://www.youtube.com/youtubei/v1/player';
-    const headers = {
-      'Content-Type': 'application/json',
-    };
-  
-    try {
-      const response = await fetch(videourl, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(postDataVideo),
-      });
-  
-      if (!response.ok) {
-        return new Response(JSON.stringify({ error: 'Failed to fetch data from YouTube API' }), {
-          status: response.status,
-        });
-      }
-  
-      const data = await response.json();
-      return new Response(JSON.stringify(data), {
-        status: 200,
-      });
-    } catch (error) {
-      return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-        status: 500,
-      });
+  try {
+    const { videoUrl } = await request.json();
+
+    if (!ytdl.validateURL(videoUrl)) {
+      throw new Error('Invalid YouTube URL');
     }
+
+    const info = await ytdl.getInfo(videoUrl);
+
+    const formats = info.formats.map(format => ({
+      itag: format.itag,
+      url: format.url,
+      mimeType: format.mimeType,
+      qualityLabel: format.qualityLabel,
+      bitrate: format.bitrate,
+      audioQuality: format.audioQuality,
+      fps: format.fps,
+      width: format.width,
+      height: format.height,
+    }));
+
+    const response = {
+      videoDetails: {
+        title: info.videoDetails.title,
+        description: info.videoDetails.description,
+        thumbnails: info.videoDetails.thumbnails,
+        lengthSeconds: info.videoDetails.lengthSeconds,
+        viewCount: info.videoDetails.viewCount,
+        author: info.videoDetails.author.name,
+        keywords: info.videoDetails.keywords,
+      },
+      formats: formats,
+    };
+
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+      },
+    });
+  } catch (error) {
+    console.error('Error in fetchVideoData:', error);
+    return new Response(JSON.stringify({ error: error.message || 'Internal Server Error' }), {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   }
-  
+}
