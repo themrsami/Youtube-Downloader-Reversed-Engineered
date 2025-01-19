@@ -5,42 +5,26 @@ export async function POST(request) {
   try {
     const { videoUrl } = await request.json();
 
-    if (!ytdl.validateURL(videoUrl)) {
-      throw new Error('Invalid YouTube URL');
+    const response = await fetch('http://localhost:8000/api/video-info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: videoUrl }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch video data');
     }
 
-    const info = await ytdl.getInfo(videoUrl);
-
-    const formats = info.formats.map(format => ({
-      itag: format.itag,
-      url: format.url,
-      mimeType: format.mimeType,
-      qualityLabel: format.qualityLabel,
-      bitrate: format.bitrate,
-      audioQuality: format.audioQuality,
-      fps: format.fps,
-      width: format.width,
-      height: format.height,
-    }));
-
-    const response = {
-      videoDetails: {
-        title: info.videoDetails.title,
-        description: info.videoDetails.description,
-        thumbnails: info.videoDetails.thumbnails,
-        lengthSeconds: info.videoDetails.lengthSeconds,
-        viewCount: info.videoDetails.viewCount,
-        author: info.videoDetails.author.name,
-        keywords: info.videoDetails.keywords,
-      },
-      formats: formats,
-    };
-
-    return new Response(JSON.stringify(response), {
+    const data = await response.json();
+    return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
         'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
       },
     });
   } catch (error) {
